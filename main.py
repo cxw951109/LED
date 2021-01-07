@@ -1029,5 +1029,6 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     form = Ui_Form()
     form.show()
+    # form.setGeometry(0,0,1920,1080)
     # form.showFullScreen()
     sys.exit(app.exec_())

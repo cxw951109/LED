@@ -1,2 +1,2 @@
 Set ws = CreateObject("Wscript.Shell") 
-ws.run "cmd /c C:/Users/cxw/Desktop/LED/main.py",vbhide
+ws.run "cmd /c  cd C:\Users\cxw\Desktop\LED && python main.py",vbhide

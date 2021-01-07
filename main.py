@@ -1021,6 +1021,7 @@ def start_server():
 
 
 server_thread=threading.Thread(target=start_server)
+server_thread.setDaemon(True)
 server_thread.start()
 
 

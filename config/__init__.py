@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker,relationship
 from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
 
-engine = create_engine("mysql+pymysql://root:111@127.0.0.1/test5")
+engine = create_engine("mysql+pymysql://root:1111@127.0.0.1/demo")
 
 Base = declarative_base()
 

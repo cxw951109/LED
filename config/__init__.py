@@ -120,7 +120,8 @@ def chart2(value,start,end):
 def get_today():
     today = datetime.date.today()
     target_res = today.strftime("%Y-%m-%d")
-    query = session.query(Dailydata).filter(Dailydata.created_time==target_res).first()
+    # query = session.query(Dailydata).filter(Dailydata.created_time==target_res).first()
+    query = session.query(Dailydata2).first()
     if query:
         all =query.goodNum+query.badNum
         return all,query.goodNum,query.badNum
@@ -136,6 +137,14 @@ class Dailydata(Base):
     goodNum = Column(Integer)
     badNum = Column(Integer)
     created_time = Column(String(20))
+
+
+class Dailydata2(Base):
+    __tablename__ = 'daily_data2'
+
+    id = Column(Integer(), primary_key=True,autoincrement=True)
+    goodNum = Column(Integer)
+    badNum = Column(Integer)
 
 
 class Baddata(Base):
@@ -248,3 +257,7 @@ class Item2(BaseModel):
 Base.metadata.create_all(engine)
 MySession = sessionmaker(bind=engine)
 session = MySession()
+res = session.query(Dailydata2).first()
+if not res:
+    session.add(Dailydata2(goodNum=0, badNum=0))
+    session.commit()

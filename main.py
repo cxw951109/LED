@@ -241,7 +241,7 @@ class B(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         self.pushButton.setText(_translate("Form", "上一步"))
-        self.pushButton_2.setText(_translate("Form", "重来"))
+        self.pushButton_2.setText(_translate("Form", "重新扫描"))
         self.pushButton_3.setText(_translate("Form", "下一步"))
 
 
@@ -657,6 +657,33 @@ class Ui_Form(QWidget):
                                       "\n"
                                       "")
         self.horizontalLayout_3.addWidget(self.pushButton)
+
+        spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem5)
+        self.pushButton_2 = QtWidgets.QPushButton(self.widget1)
+        self.pushButton_2.clicked.connect(self.g)
+        self.pushButton_2.setMinimumSize(QtCore.QSize(150, 100))
+        self.pushButton_2.setMaximumSize(QtCore.QSize(150, 100))
+        self.pushButton_2.setStyleSheet("QPushButton\n"
+                                      "{\n"
+                                      "    font: 12pt \'幼圆\'; \n"
+                                      "    color:black;\n"
+                                      "    background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #E5E5E5, stop: 1 #B7B7B7);\n"
+                                      "    border:2px solid white;border-radius:10px;\n"
+                                      "\n"
+                                      "}\n"
+                                      "\n"
+                                      "QPushButton:pressed\n"
+                                      "{\n"
+                                      "    background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #E5E5E5, stop: 1 #B7B7B7);\n"
+                                      "    color:black;\n"
+                                      "    border:2px solid white;border-radius:10px;\n"
+                                      "    padding-left:6px;\n"
+                                      "    padding-top:6px;\n"
+                                      "}\n"
+                                      "\n"
+                                      "")
+        self.horizontalLayout_3.addWidget(self.pushButton_2)
         spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem4)
         self.label_9 = QtWidgets.QLabel(self.widget1)
@@ -667,32 +694,6 @@ class Ui_Form(QWidget):
                                    "font: 10pt \"幼圆\";\n"
                                    "color:red")
         self.horizontalLayout_3.addWidget(self.label_9)
-        # spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
-        # self.horizontalLayout_3.addItem(spacerItem5)
-        # self.pushButton_2 = QtWidgets.QPushButton(self.widget1)
-        # self.pushButton_2.clicked.connect(self.stop)
-        # self.pushButton_2.setMinimumSize(QtCore.QSize(120, 70))
-        # self.pushButton_2.setMaximumSize(QtCore.QSize(120, 70))
-        # self.pushButton_2.setStyleSheet("QPushButton\n"
-        #                                 "{\n"
-        #                                 "    font: 12pt \'幼圆\'; \n"
-        #                                 "    color:black;\n"
-        #                                 "    background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #E5E5E5, stop: 1 #B7B7B7);\n"
-        #                                 "    border:2px solid white;border-radius:10px;\n"
-        #                                 "\n"
-        #                                 "}\n"
-        #                                 "\n"
-        #                                 "QPushButton:pressed\n"
-        #                                 "{\n"
-        #                                 "    background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #E5E5E5, stop: 1 #B7B7B7);\n"
-        #                                 "    color:black;\n"
-        #                                 "    border:2px solid white;border-radius:10px;\n"
-        #                                 "    padding-left:6px;\n"
-        #                                 "    padding-top:6px;\n"
-        #                                 "}\n"
-        #                                 "\n"
-        #                                 "")
-        # self.horizontalLayout_3.addWidget(self.pushButton_2)
         spacerItem6 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem6)
         # self.pushButton_3 = QtWidgets.QPushButton(self.widget1)
@@ -777,11 +778,12 @@ class Ui_Form(QWidget):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "安视LED灯检"))
         self.pushButton.setText(_translate("Form", "启动"))
+        self.pushButton_2.setText(_translate("Form", "清除班次记录"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget), _translate("Form", "运行"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget2), _translate("Form", "模板档案"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget3), _translate("Form", "产品录入"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget4), _translate("Form", "图表分析"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget5), _translate("Form", "历史记录"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget5), _translate("Form", "不良明细"))
 
     #退出全屏（已停用）
     def normal(self):
@@ -898,13 +900,13 @@ class Ui_Form(QWidget):
         all,good,bad =get_today()
         self.label.setText("<font style = 'font-size:50px; color:white; font-weight:bold'>"+str(all)+"</font>"
                            "<br/>""<br/>"
-                           "<font style = 'font-size:20px; color:white;'> 今日检测数 </font>")
+                           "<font style = 'font-size:20px; color:white;'> 班次检测数 </font>")
         self.label_2.setText("<font style = 'font-size:50px; color:white; font-weight:bold'>"+str(good)+"</font>"
                              "<br/>""<br/>"
-                             "<font style = 'font-size:20px; color:white;'> 今日合格数 </font>")
+                             "<font style = 'font-size:20px; color:white;'> 班次合格数 </font>")
         self.label_3.setText("<font style = 'font-size:50px; color:white; font-weight:bold'>"+str(bad)+"</font>"
                              "<br/>""<br/>"
-                             "<font style = 'font-size:20px; color:white;'> 今日次品数 </font>")
+                             "<font style = 'font-size:20px; color:white;'> 班次次品数 </font>")
 
     #获取模板列表
     def getlist(self, e):
@@ -953,6 +955,18 @@ class Ui_Form(QWidget):
             self.t1.start_date =date1 + datetime.timedelta(days=1)
             self.t1.end_date =date2++ datetime.timedelta(days=1)
 
+    #清除班次记录
+    def g(self):
+        res = session.query(Dailydata2).first()
+        if res.goodNum != 0 or res.badNum != 0:
+            reply = QMessageBox.information(self, '信息', '是否清除上一班次数据!',
+                                            QMessageBox.Yes | QMessageBox.No)
+            if reply == QMessageBox.Yes:
+                session.query(Dailydata2).update(
+                    {Dailydata2.badNum: 0, Dailydata2.goodNum: 0},
+                    synchronize_session=False)
+                session.commit()
+
 
 @app.post('/error/')
 async def error_mes(item:Item):
@@ -981,10 +995,14 @@ async def result_mes(item:Item2):
         form.label_8.setText('')
     data =session.query(Dailydata).filter(Dailydata.standard_name==item.standard_name,Dailydata.created_time ==t1).first()
     if data:
-        session.query(Standard).filter(Dailydata.standard_name==item.standard_name,Dailydata.created_time ==t1).update({Dailydata.badNum: Dailydata.badNum + badNum, Dailydata.goodNum: Dailydata.goodNum + goodNum},
+        session.query(Dailydata).filter(Dailydata.standard_name==item.standard_name,Dailydata.created_time ==t1).update({Dailydata.badNum: Dailydata.badNum + badNum, Dailydata.goodNum: Dailydata.goodNum + goodNum},
+                 synchronize_session=False)
+        session.query(Dailydata2).update({Dailydata2.badNum: Dailydata2.badNum + badNum, Dailydata2.goodNum: Dailydata2.goodNum + goodNum},
                  synchronize_session=False)
     else:
         session.add(Dailydata(standard_name=item.standard_name,badNum=badNum,goodNum=goodNum,created_time=t1))
+        session.query(Dailydata2).update({Dailydata2.badNum: Dailydata2.badNum + badNum, Dailydata2.goodNum: Dailydata2.goodNum + goodNum},
+                 synchronize_session=False)
     if final !=[]:
         for i in final:
             query = session.query(Baddata).filter(Baddata.created_time ==t1,Baddata.standard_name ==item.standard_name,Baddata.types ==i["class"]).first()

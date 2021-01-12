@@ -197,6 +197,12 @@ class Standard(Base):
     id = Column(Integer(), primary_key=True,autoincrement=True)
     name = Column(String(20))
     rows =Column(String(10))
+    rspace =Column(String(10))
+    cspace =Column(String(10))
+    lspace =Column(String(10))
+    tspace =Column(String(10))
+    mspace = Column(String(10))
+    size = Column(String(10))
     columns = Column(String(10))
     wide =Column(String(10))
     high = Column(String(10))
@@ -208,9 +214,15 @@ class Standard(Base):
     flag = Column(Integer,default=0)
     created_time = Column(String(20))
 
-    def __init__(self, name, rows,columns,wide,high,remarks,url1,url2,url3,url4,created_time,flag):
+    def __init__(self, name, rows, rspace, cspace, lspace, tspace, mspace, size, columns,wide,high,remarks,url1,url2,url3,url4,created_time,flag):
         self.name = name
         self.rows = rows
+        self.rspace =rspace
+        self.cspace =cspace
+        self.lspace = lspace
+        self.tspace = tspace
+        self.mspace = mspace
+        self.size = size
         self.columns = columns
         self.wide = wide
         self.high = high
@@ -227,6 +239,12 @@ class Standard(Base):
             "id":self.id,
             "name": self.name,
             "rows": self.rows,
+            "rspace":self.rspace,
+            "cspace":self.cspace,
+            "lspace":self.lspace,
+            "tspace":self.tspace,
+            "mspace":self.mspace,
+            "size":self.size,
             "columns": self.columns,
             "wide": self.wide,
             "high": self.high,

@@ -496,34 +496,29 @@ class Ui_Form(QWidget):
                 if m and n and r and f and o and p and q and s and u:
                     res = session.query(Standard.name).filter(Standard.flag != 2,Standard.name == self.name).all()
                     if res == []:
-                        reply = QMessageBox.information(self, '信息', '确认标准件放置!',
-                                                        QMessageBox.Yes | QMessageBox.No)
-                        if reply == QMessageBox.Yes:
-                            self.message[0] = self.name
-                            self.message[2] = self.rows
-                            self.message[3] = self.columns
-                            self.message[5] = self.wide
-                            self.message[4] = self.high
-                            self.message[1] = self.remarks
-                            self.message[6] = self.rspace
-                            self.message[7] = self.cspace
-                            self.message[8] = self.lspace
-                            self.message[9] = self.tspace
-                            self.message[10] = self.mspace
-                            self.message[11] = self.size
-                            self.Page1.lineEdit_0.clear()
-                            self.Page1.lineEdit_1.clear()
-                            self.Page1.lineEdit_2.clear()
-                            self.Page1.lineEdit_3.clear()
-                            self.Page1.lineEdit_4.clear()
-                            self.Page1.lineEdit_5.clear()
-                            self.Page1.lineEdit_6.clear()
-                            self.Page1.lineEdit_7.clear()
-                            self.Page1.lineEdit_8.clear()
-                            self.Page1.lineEdit_9.clear()
-                            self.Page1.lineEdit_10.clear()
-                            self.Page1.comboBox.setCurrentIndex(0)
-                            self.qsl.setCurrentIndex(index[sender])
+                        result =self.inputDialog()
+                        if result == None:
+                            pass
+                        elif result == True:
+                            reply = QMessageBox.information(self, '信息', '确认标准件放置!',
+                                                            QMessageBox.Yes | QMessageBox.No)
+                            if reply == QMessageBox.Yes:
+                                self.message[0] = self.name
+                                self.message[2] = self.rows
+                                self.message[3] = self.columns
+                                self.message[5] = self.wide
+                                self.message[4] = self.high
+                                self.message[1] = self.remarks
+                                self.message[6] = self.rspace
+                                self.message[7] = self.cspace
+                                self.message[8] = self.lspace
+                                self.message[9] = self.tspace
+                                self.message[10] = self.mspace
+                                self.message[11] = self.size
+                                self.qsl.setCurrentIndex(index[sender])
+                        else:
+                            reply = QMessageBox.information(self, '信息', '密码错误!权限不足！',
+                                                            QMessageBox.Yes | QMessageBox.No)
                     else:
                         reply = QMessageBox.information(self, '信息', '模板名称重复!',
                                                         QMessageBox.Yes | QMessageBox.No)
@@ -548,6 +543,18 @@ class Ui_Form(QWidget):
                 self.Page2.label_2.setPixmap(QPixmap(""))
                 self.Page2.label_3.setPixmap(QPixmap(""))
                 self.Page2.label_4.setPixmap(QPixmap(""))
+                self.Page1.lineEdit_0.clear()
+                self.Page1.lineEdit_1.clear()
+                self.Page1.lineEdit_2.clear()
+                self.Page1.lineEdit_3.clear()
+                self.Page1.lineEdit_4.clear()
+                self.Page1.lineEdit_5.clear()
+                self.Page1.lineEdit_6.clear()
+                self.Page1.lineEdit_7.clear()
+                self.Page1.lineEdit_8.clear()
+                self.Page1.lineEdit_9.clear()
+                self.Page1.lineEdit_10.clear()
+                self.Page1.comboBox.setCurrentIndex(0)
                 self.qsl.setCurrentIndex(index[sender])
         elif sender == "Last":
             self.Page2.label.setPixmap(QPixmap(""))
@@ -881,7 +888,7 @@ class Ui_Form(QWidget):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "安视LED灯检"))
-        self.pushButton.setText(_translate("Form", "启动"))
+        self.pushButton.setText(_translate("Form", "更换型号"))
         self.pushButton_2.setText(_translate("Form", "清除班次记录"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget), _translate("Form", "运行"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget2), _translate("Form", "模板档案"))
@@ -938,6 +945,16 @@ class Ui_Form(QWidget):
             self.pushButton.setText("启动")
             self.pushButton.setStyleSheet(
                 "background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #E5E5E5, stop: 1 #B7B7B7);border: 1px solid #EDEDED ;border-radius: 10px;padding:3px;font: 12pt '幼圆';color:black}\n")
+
+    def inputDialog(self):
+        text, ok = QInputDialog.getText(self, '权限密码', '输入密码')
+        if ok:
+            if text =='123456':
+                return True
+            else:
+                return False
+        else:
+            return None
 
     #停止（已停用）
     def stop(self):

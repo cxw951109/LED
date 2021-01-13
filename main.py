@@ -1032,11 +1032,16 @@ class Ui_Form(QWidget):
     #删除获取模板列表
     def getlist(self, e):
         if e.isdigit():
-            session.query(Standard).filter(Standard.id == int(e)).update({Standard.flag: 2}, synchronize_session=False)
-            session.commit()
-            lists = session.query(Standard).filter(Standard.flag != 2).all()
-            lists = [x.to_dict() for x in lists]
-            self.his.page().runJavaScript("window.uptext('{}')".format(json.dumps(lists)))
+            reply = QMessageBox.information(self, '提示', '删除后无法恢复!',
+                                            QMessageBox.Yes | QMessageBox.No)
+            if reply == QMessageBox.Yes:
+                session.query(Standard).filter(Standard.id == int(e)).update({Standard.flag: 2}, synchronize_session=False)
+                session.commit()
+                lists = session.query(Standard).filter(Standard.flag != 2).all()
+                lists = [x.to_dict() for x in lists]
+                self.his.page().runJavaScript("window.uptext('{}')".format(json.dumps(lists)))
+            else:
+                pass
         else:
             lists = session.query(Standard).filter(Standard.flag != 2,Standard.name.like("%" + e[1:] + "%")).all()
             lists = [x.to_dict() for x in lists]

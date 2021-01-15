@@ -658,6 +658,7 @@ class Ui_Form(QWidget):
         self.gridLayout_2.addItem(spacerItem2, 1, 0, 1, 1)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.label_4 = QtWidgets.QLabel(self.widget)
+        self.label_4.setScaledContents(True)
         self.label_4.setMinimumSize(QtCore.QSize(200, 300))
         self.label_4.setStyleSheet("background-color: rgb(0, 0, 0);\n"
                                    "border: 1px solid #EDEDED;\n"
@@ -665,6 +666,7 @@ class Ui_Form(QWidget):
                                    "padding:3px")
         self.horizontalLayout_2.addWidget(self.label_4)
         self.label_5 = QtWidgets.QLabel(self.widget)
+        self.label_5.setScaledContents(True)
         self.label_5.setMinimumSize(QtCore.QSize(200, 300))
         self.label_5.setStyleSheet("background-color: rgb(0, 0, 0);\n"
                                    "border: 1px solid #EDEDED;\n"
@@ -672,6 +674,7 @@ class Ui_Form(QWidget):
                                    "padding:3px")
         self.horizontalLayout_2.addWidget(self.label_5)
         self.label_6 = QtWidgets.QLabel(self.widget)
+        self.label_6.setScaledContents(True)
         self.label_6.setMinimumSize(QtCore.QSize(200, 300))
         self.label_6.setStyleSheet("background-color: rgb(0,0,0);\n"
                                    "border: 1px solid #EDEDED;\n"
@@ -679,6 +682,7 @@ class Ui_Form(QWidget):
                                    "padding:3px")
         self.horizontalLayout_2.addWidget(self.label_6)
         self.label_7 = QtWidgets.QLabel(self.widget)
+        self.label_7.setScaledContents(True)
         self.label_7.setMinimumSize(QtCore.QSize(200, 300))
         self.label_7.setStyleSheet("background-color: rgb(0,0,0);\n"
                                    "border: 1px solid #EDEDED;\n"
@@ -695,7 +699,7 @@ class Ui_Form(QWidget):
                                    "border: 1px solid #EDEDED;\n"
                                    "border-radius: 10px;\n"
                                    "padding:3px;\n"
-                                   "font: 8pt \"幼圆\";")
+                                   "font: 12pt \"幼圆\";")
         self.gridLayout_2.addWidget(self.label_8, 3, 0, 1, 1)
         self.widget1 = QtWidgets.QWidget(self.widget)
         self.widget1.setMaximumSize(QtCore.QSize(16777215, 120))
@@ -1116,7 +1120,8 @@ async def result_mes(item:Item2):
             result[items['class']]['image'].append(items['image'])
             final = [{'class': name, **{inner_names: inner_values for inner_names, inner_values in values.items()}} for
                      name, values in result.items()]
-        form.label_8.setText(str(final))
+        # form.label_8.setText(str(final))
+        form.label_8.setText("合格数："+str(goodNum)+"   劣质数："+str(badNum)+"   时间："+str(t))
     else:
         form.label_8.setText('')
     data =session.query(Dailydata).filter(Dailydata.standard_name==item.standard_name,Dailydata.created_time ==t1).first()

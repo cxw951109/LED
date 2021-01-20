@@ -925,9 +925,9 @@ class Ui_Form(QWidget):
                 session.commit()
                 self.label_10.setText("当前检测型号:" + text)
                 self.Start = True
-                self.pushButton.setText("停止")
-                self.pushButton.setStyleSheet(
-                    "background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #E5E5E5, stop: 1 #B7B7B7);border: 2px solid red;border-radius: 10px;padding:3px;font: 12pt '幼圆';color:red}\n")
+                # self.pushButton.setText("停止")
+                # self.pushButton.setStyleSheet(
+                #     "background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #E5E5E5, stop: 1 #B7B7B7);border: 2px solid red;border-radius: 10px;padding:3px;font: 12pt '幼圆';color:red}\n")
             else:
                 query =session.query(Standard).filter(Standard.flag ==1).first()
                 if query:
@@ -938,17 +938,17 @@ class Ui_Form(QWidget):
                     self.label_6.setPixmap(QPixmap(''))
                     self.label_7.setPixmap(QPixmap(''))
                     self.Start =True
-                    self.pushButton.setText( "停止")
-                    self.pushButton.setStyleSheet(
-                        "background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #E5E5E5, stop: 1 #B7B7B7);border: 2px solid red;border-radius: 10px;padding:3px;font: 12pt '幼圆';color:red}\n")
+                    # self.pushButton.setText( "停止")
+                    # self.pushButton.setStyleSheet(
+                    #     "background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #E5E5E5, stop: 1 #B7B7B7);border: 2px solid red;border-radius: 10px;padding:3px;font: 12pt '幼圆';color:red}\n")
                 else:
                     reply = QMessageBox.information(self, '信息', '请先选择型号!',
                                                     QMessageBox.Yes | QMessageBox.No)
         else:
             self.Start = False
-            self.pushButton.setText("启动")
-            self.pushButton.setStyleSheet(
-                "background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #E5E5E5, stop: 1 #B7B7B7);border: 1px solid #EDEDED ;border-radius: 10px;padding:3px;font: 12pt '幼圆';color:black}\n")
+            # self.pushButton.setText("启动")
+            # self.pushButton.setStyleSheet(
+            #     "background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #E5E5E5, stop: 1 #B7B7B7);border: 1px solid #EDEDED ;border-radius: 10px;padding:3px;font: 12pt '幼圆';color:black}\n")
 
     def inputDialog(self):
         text, ok = QInputDialog.getText(self, '权限密码', '输入密码')

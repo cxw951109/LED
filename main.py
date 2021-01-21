@@ -711,7 +711,7 @@ class Ui_Form(QWidget):
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.label_10 = QtWidgets.QLabel(self.widget1)
-        self.label_10.setStyleSheet("font: 16pt '幼圆';color:red; \n"
+        self.label_10.setStyleSheet("font: 12pt '幼圆';color:red; \n"
                                     "border: 0px solid #EDEDED; \n"
                                     "padding-bottom:5px;")
         self.verticalLayout.addWidget(self.label_10)

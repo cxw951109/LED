@@ -101,7 +101,7 @@ def chart2(value,start,end):
     good =sum([x.goodNum for x in query])
     bad =sum([x.badNum for x in query])
     all =good+bad
-    names =[1,2,3]
+    names =['气泡','多少胶','粘胶','染色','异物','变形']
     series2 = []
     for i in names:
         series2.append({"value":sum([x.Num for x in query1 if x.types == i]),"name":i})

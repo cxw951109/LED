@@ -1149,16 +1149,14 @@ async def result_mes(item:Item2):
 
 @app.post('/imgs/')
 async def get_imgs(item:Item1):
-    for i in item.signal:
-        for k, v in i.items():
-            if int(k) ==1:
-                form.label_4.setPixmap(QPixmap(v))
-            elif int(k) == 2:
-                form.label_5.setPixmap(QPixmap(v))
-            elif int(k) == 3:
-                form.label_6.setPixmap(QPixmap(v))
-            else:
-                form.label_7.setPixmap(QPixmap(v))
+    if item.key ==1:
+        form.label_4.setPixmap(QPixmap(item.value))
+    elif item.key ==2:
+        form.label_5.setPixmap(QPixmap(item.value))
+    elif item.key ==3:
+        form.label_6.setPixmap(QPixmap(item.value))
+    else:
+        form.label_7.setPixmap(QPixmap(item.value))
     return {"status":200}
 
 def start_server():

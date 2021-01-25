@@ -263,8 +263,8 @@ class Item(BaseModel):
 
 
 class Item1(BaseModel):
-    signal: list
-
+    key: int
+    value: str
 
 class Item2(BaseModel):
     total: int

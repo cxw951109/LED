@@ -190,7 +190,7 @@ class A(object):
         self.label_25.setText(_translate("Form", "行间距："))
         self.label_19.setText(_translate("Form", "单粒高："))
         self.label_24.setText(_translate("Form", "列数："))
-        self.label_23.setText(_translate("Form", "备注："))
+        self.label_23.setText(_translate("Form", "长度："))
         self.label_30.setText(_translate("Form", "料盒规格："))
         self.label_21.setText(_translate("Form", "行数:"))
         self.label_22.setText(_translate("Form", "型号："))
@@ -456,7 +456,7 @@ class Ui_Form(QWidget):
             "Next": 0,
         }
         if sender == "Page0":
-            self.remarks =self.Page1.lineEdit_1.text()
+            self.long =self.Page1.lineEdit_1.text()
             self.wide =self.Page1.lineEdit_5.text()
             self.columns =self.Page1.lineEdit_3.text()
             self.high =self.Page1.lineEdit_4.text()
@@ -468,7 +468,7 @@ class Ui_Form(QWidget):
             self.tspace = self.Page1.lineEdit_9.text()
             self.mspace = self.Page1.lineEdit_10.text()
             self.size = self.Page1.comboBox.currentText()
-            if self.wide and self.high and self.columns and self.rows and self.name and self.rspace and self.cspace and self.lspace and self.tspace and self.mspace and self.size !="请选择型号":
+            if self.wide and self.long and self.high and self.columns and self.rows and self.name and self.rspace and self.cspace and self.lspace and self.tspace and self.mspace and self.size !="请选择型号":
                 value = re.compile(r'^[-+]?[0-9]+\.[0-9]+$')
                 m =value.match(self.wide)
                 n = value.match(self.high)
@@ -477,6 +477,7 @@ class Ui_Form(QWidget):
                 q =value.match(self.lspace)
                 s = value.match(self.tspace)
                 u =value.match(self.mspace)
+                z =value.match(self.long)
                 r = self.rows.isdigit()
                 f =self.columns.isdigit()
                 if not m:
@@ -493,7 +494,9 @@ class Ui_Form(QWidget):
                     s = self.tspace.isdigit()
                 if not u:
                     u = self.mspace.isdigit()
-                if m and n and r and f and o and p and q and s and u:
+                if not z:
+                    z = self.long.isdigit()
+                if m and n and r and f and o and p and q and s and u and z:
                     res = session.query(Standard.name).filter(Standard.flag != 2,Standard.name == self.name).all()
                     if res == []:
                         result =self.inputDialog()
@@ -508,7 +511,7 @@ class Ui_Form(QWidget):
                                 self.message[3] = self.columns
                                 self.message[5] = self.wide
                                 self.message[4] = self.high
-                                self.message[1] = self.remarks
+                                self.message[1] = self.long
                                 self.message[6] = self.rspace
                                 self.message[7] = self.cspace
                                 self.message[8] = self.lspace
@@ -534,7 +537,7 @@ class Ui_Form(QWidget):
             if reply == QMessageBox.Yes:
                 t = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
                 session.add(Standard(name=self.message[0], rows=self.message[2], columns=self.message[3],
-                               wide=self.message[5], high=self.message[4], remarks=self.message[1],rspace=self.message[6], cspace=self.message[7], lspace=self.message[8],
+                               wide=self.message[5], high=self.message[4], long=self.message[1],rspace=self.message[6], cspace=self.message[7], lspace=self.message[8],
                                tspace=self.message[9], mspace=self.message[10], size=self.message[11],url1='',url2='',
                                url3='',url4='',created_time=t,
                                flag=0))

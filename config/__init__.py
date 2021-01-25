@@ -206,7 +206,7 @@ class Standard(Base):
     columns = Column(String(10))
     wide =Column(String(10))
     high = Column(String(10))
-    remarks =Column(String(50),default='')
+    long =Column(String(10))
     url1 = Column(String(100))
     url2 = Column(String(100))
     url3 = Column(String(100))
@@ -214,7 +214,7 @@ class Standard(Base):
     flag = Column(Integer,default=0)
     created_time = Column(String(20))
 
-    def __init__(self, name, rows, rspace, cspace, lspace, tspace, mspace, size, columns,wide,high,remarks,url1,url2,url3,url4,created_time,flag):
+    def __init__(self, name, rows, rspace, cspace, lspace, tspace, mspace, size, columns,wide,high,long,url1,url2,url3,url4,created_time,flag):
         self.name = name
         self.rows = rows
         self.rspace =rspace
@@ -226,7 +226,7 @@ class Standard(Base):
         self.columns = columns
         self.wide = wide
         self.high = high
-        self.remarks = remarks
+        self.long = long
         self.url1 = url1
         self.url2 = url2
         self.url3 = url3
@@ -248,7 +248,7 @@ class Standard(Base):
             "columns": self.columns,
             "wide": self.wide,
             "high": self.high,
-            "remarks": self.remarks,
+            "long": self.long,
             "url1":self.url1,
             "url2": self.url2,
             "url3": self.url3,

@@ -334,8 +334,10 @@ class Worker(QThread, QObject):
             else:
                 print('thread'+str(self.tag)+' is running')
                 if self.tag ==3:
-                    result = chart1(self.data)
-                    result1 = chart2(self.data,self.start_date,self.end_date)
+                    session3 = MySession()
+                    result = chart1(session3,self.data,self.start_date,self.end_date)
+                    result1 = chart2(session3,self.data,self.start_date,self.end_date)
+                    session3.close()
                     series = [result, result1]
                     self.breakSignal.emit(series)
                     time.sleep(5)
@@ -577,6 +579,7 @@ class Ui_Form(QWidget):
     def setupUi(self):
         self.resize(1650, 950)
         self.setMinimumSize(1150, 800)
+        self.timer.timeout.connect(self.change_today)
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.tabWidget = TabWidget()
         self.tabWidget.currentChanged.connect(self.slot_small_tab)
@@ -953,6 +956,7 @@ class Ui_Form(QWidget):
             # self.pushButton.setStyleSheet(
             #     "background-color:qlineargradient(x1:0, y1:0, x2:0, y2:1, stop: 0 #E5E5E5, stop: 1 #B7B7B7);border: 1px solid #EDEDED ;border-radius: 10px;padding:3px;font: 12pt '幼圆';color:black}\n")
 
+    #输入密码
     def inputDialog(self):
         text, ok = QInputDialog.getText(self, '权限密码', '输入密码')
         if ok:
@@ -988,7 +992,6 @@ class Ui_Form(QWidget):
     def slot_small_tab(self):
         if self.tabWidget.currentIndex() == 0:
             self.t1.Flag = False
-            self.timer.timeout.connect(self.change_today)
             self.timer.start(1000)
             names = session.query(Standard).filter(Standard.flag == 1).all()
             names = [x.to_dict() for x in names]
@@ -1038,26 +1041,34 @@ class Ui_Form(QWidget):
 
     #删除获取模板列表
     def getlist(self, e):
+        session = MySession()
         if e.isdigit():
             reply = QMessageBox.information(self, '提示', '删除后无法恢复!',
                                             QMessageBox.Yes | QMessageBox.No)
             if reply == QMessageBox.Yes:
-                session.query(Standard).filter(Standard.id == int(e)).update({Standard.flag: 2}, synchronize_session=False)
-                session.commit()
-                lists = session.query(Standard).filter(Standard.flag != 2).all()
-                lists = [x.to_dict() for x in lists]
-                self.his.page().runJavaScript("window.uptext('{}')".format(json.dumps(lists)))
+                try:
+                    session.query(Standard).filter(Standard.id == int(e)).update({Standard.flag: 2}, synchronize_session=False)
+                    session.commit()
+                    lists = session.query(Standard).filter(Standard.flag != 2).all()
+                    lists = [x.to_dict() for x in lists]
+                    self.his.page().runJavaScript("window.uptext('{}')".format(json.dumps(lists)))
+                except:
+                    session.close()
+                    session = MySession()
             else:
                 pass
         else:
             lists = session.query(Standard).filter(Standard.flag != 2,Standard.name.like("%" + e[1:] + "%")).all()
+            session.close()
             lists = [x.to_dict() for x in lists]
             self.his.page().runJavaScript("window.uptext('{}')".format(json.dumps(lists)))
 
     #获取历史记录
     def get_hislist(self, e):
+        session = MySession()
         lists = session.query(History).filter(History.standard_name.like("%" + e[0][1:] + "%"),History.types.like("%" + e[1][1:] + "%")).order_by(History.id.desc()).limit(200)
         lists = [x.to_dict() for x in lists]
+        session.close()
         self.his2.page().runJavaScript("window.uptext('{}')".format(json.dumps(lists)))
 
     #修改检测模板（已停用）
@@ -1090,27 +1101,125 @@ class Ui_Form(QWidget):
 
     #清除班次记录
     def g(self):
+        session = MySession()
         res = session.query(Dailydata2).first()
         if res.goodNum != 0 or res.badNum != 0:
             reply = QMessageBox.information(self, '信息', '是否清除上一班次数据!',
                                             QMessageBox.Yes | QMessageBox.No)
             if reply == QMessageBox.Yes:
-                session.query(Dailydata2).update(
-                    {Dailydata2.badNum: 0, Dailydata2.goodNum: 0},
-                    synchronize_session=False)
-                session.commit()
+                try:
+                    session.query(Dailydata2).update(
+                        {Dailydata2.badNum: 0, Dailydata2.goodNum: 0},
+                        synchronize_session=False)
+                    session.commit()
+                    session.close()
+                except:
+                    session.close()
+                    session = MySession()
+
+    # def getimg(self):
+    #     item ={
+    #         "total":20,
+    #         "standard_name":"1",
+    #         "result":[
+    #             {
+    #                 "image":'./icon/bad.png',
+    #                 "class":"气泡"
+    #             },
+    #             {
+    #                 "image": './icon/bad.png',
+    #                 "class": "染色"
+    #             },
+    #             {
+    #                 "image": './icon/bad.png',
+    #                 "class": "异物"
+    #             },
+    #             {
+    #                 "image": './icon/bad.png',
+    #                 "class": "染色"
+    #             }
+    #          ]
+    #     }
+    #     while 1:
+    #         time.sleep(2)
+    #         session1 = MySession()
+    #
+    #         badNum = len(item["result"])
+    #         goodNum = item["total"] - badNum
+    #         t = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    #         t1 = time.strftime("%Y-%m-%d", time.localtime())
+    #         result = defaultdict(lambda: defaultdict(list))
+    #         final = []
+    #         if item["result"] != []:
+    #             for items in item["result"]:
+    #                 session1.add(History(standard_name=item["standard_name"], types=items["class"], url1=items["image"],
+    #                                      created_time=t))
+    #                 result[items['class']]['image'].append(items['image'])
+    #                 final = [{'class': name, **{inner_names: inner_values for inner_names, inner_values in values.items()}}
+    #                          for
+    #                          name, values in result.items()]
+    #             # form.label_8.setText(str(final))
+    #             # session1.commit()
+    #             form.label_8.setText("合格数：" + str(goodNum) + "   劣质数：" + str(badNum) + "   时间：" + str(t))
+    #         else:
+    #             form.label_8.setText('')
+    #         data = session1.query(Dailydata).filter(Dailydata.standard_name == item["standard_name"],Dailydata.created_time == t1).first()
+    #         if data:
+    #             session1.query(Dailydata).filter(Dailydata.standard_name == item["standard_name"],
+    #                                              Dailydata.created_time == t1).update(
+    #                 {Dailydata.badNum: Dailydata.badNum + badNum, Dailydata.goodNum: Dailydata.goodNum + goodNum},
+    #                 synchronize_session=False)
+    #             session1.query(Dailydata2).update(
+    #                 {Dailydata2.badNum: Dailydata2.badNum + badNum, Dailydata2.goodNum: Dailydata2.goodNum + goodNum},
+    #                 synchronize_session=False)
+    #         else:
+    #             session1.add(Dailydata(standard_name=item["standard_name"], badNum=badNum, goodNum=goodNum, created_time=t1))
+    #             session1.query(Dailydata2).update(
+    #                 {Dailydata2.badNum: Dailydata2.badNum + badNum, Dailydata2.goodNum: Dailydata2.goodNum + goodNum},
+    #                 synchronize_session=False)
+    #         if final != []:
+    #             for i in final:
+    #                 query = session1.query(Baddata).filter(Baddata.created_time == t1,
+    #                                                        Baddata.standard_name == item["standard_name"],
+    #                                                        Baddata.types == i["class"]).first()
+    #                 if not query:
+    #                     session1.add(Baddata(standard_name=item["standard_name"], types=i["class"], Num=len(i["image"]),
+    #                                          created_time=t1))
+    #                 else:
+    #                     session1.query(Baddata).filter(Baddata.created_time == t1,
+    #                                                    Baddata.standard_name == item["standard_name"],
+    #                                                    Baddata.types == i["class"]).update(
+    #                         {Baddata.Num: Baddata.Num + len(i["image"])}, synchronize_session=False)
+    #         try:
+    #             session1.commit()
+    #             session1.close()
+    #         except:
+    #             session1.close()
+    #             print('数据入库失败')
+    #
+    # def run(self):
+    #     self.t4 = threading.Thread(target=self.getimg)
+    #     self.t4.setDaemon(True)
+    #     self.t4.start()
 
 
 @app.post('/error/')
 async def error_mes(item:Item):
+    session4 = MySession()
     form.label_9.setText(item.msg)
     t = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    session.add(Alert(mes =item.msg,created_time=t))
-    session.commit()
+    try:
+        session4.add(Alert(mes =item.msg,created_time=t))
+        session4.commit()
+        session4.close()
+    except:
+        session4.close()
+        print('error入库失败！')
     return {"status":200}
 
 @app.post('/result/')
 async def result_mes(item:Item2):
+    session1 = MySession()
     badNum = len(item.result)
     goodNum = item.total -badNum
     t = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -1119,7 +1228,7 @@ async def result_mes(item:Item2):
     final=[]
     if item.result !=[]:
         for items in item.result:
-            session.add(History(standard_name=item.standard_name,types=items["class"],url1=items["image"],created_time=t))
+            session1.add(History(standard_name=item.standard_name,types=items["class"],url1=items["image"],created_time=t))
             result[items['class']]['image'].append(items['image'])
             final = [{'class': name, **{inner_names: inner_values for inner_names, inner_values in values.items()}} for
                      name, values in result.items()]
@@ -1127,24 +1236,29 @@ async def result_mes(item:Item2):
         form.label_8.setText("合格数："+str(goodNum)+"   劣质数："+str(badNum)+"   时间："+str(t))
     else:
         form.label_8.setText('')
-    data =session.query(Dailydata).filter(Dailydata.standard_name==item.standard_name,Dailydata.created_time ==t1).first()
+    data =session1.query(Dailydata).filter(Dailydata.standard_name==item.standard_name,Dailydata.created_time ==t1).first()
     if data:
-        session.query(Dailydata).filter(Dailydata.standard_name==item.standard_name,Dailydata.created_time ==t1).update({Dailydata.badNum: Dailydata.badNum + badNum, Dailydata.goodNum: Dailydata.goodNum + goodNum},
+        session1.query(Dailydata).filter(Dailydata.standard_name==item.standard_name,Dailydata.created_time ==t1).update({Dailydata.badNum: Dailydata.badNum + badNum, Dailydata.goodNum: Dailydata.goodNum + goodNum},
                  synchronize_session=False)
-        session.query(Dailydata2).update({Dailydata2.badNum: Dailydata2.badNum + badNum, Dailydata2.goodNum: Dailydata2.goodNum + goodNum},
+        session1.query(Dailydata2).update({Dailydata2.badNum: Dailydata2.badNum + badNum, Dailydata2.goodNum: Dailydata2.goodNum + goodNum},
                  synchronize_session=False)
     else:
-        session.add(Dailydata(standard_name=item.standard_name,badNum=badNum,goodNum=goodNum,created_time=t1))
-        session.query(Dailydata2).update({Dailydata2.badNum: Dailydata2.badNum + badNum, Dailydata2.goodNum: Dailydata2.goodNum + goodNum},
+        session1.add(Dailydata(standard_name=item.standard_name,badNum=badNum,goodNum=goodNum,created_time=t1))
+        session1.query(Dailydata2).update({Dailydata2.badNum: Dailydata2.badNum + badNum, Dailydata2.goodNum: Dailydata2.goodNum + goodNum},
                  synchronize_session=False)
     if final !=[]:
         for i in final:
-            query = session.query(Baddata).filter(Baddata.created_time ==t1,Baddata.standard_name ==item.standard_name,Baddata.types ==i["class"]).first()
+            query = session1.query(Baddata).filter(Baddata.created_time ==t1,Baddata.standard_name ==item.standard_name,Baddata.types ==i["class"]).first()
             if not query:
-                session.add(Baddata(standard_name=item.standard_name,types=i["class"],Num=len(i["image"]),created_time=t1))
+                session1.add(Baddata(standard_name=item.standard_name,types=i["class"],Num=len(i["image"]),created_time=t1))
             else:
-                session.query(Baddata).filter(Baddata.created_time ==t1,Baddata.standard_name ==item.standard_name,Baddata.types ==i["class"]).update({Baddata.Num: Baddata.Num+len(i["image"])}, synchronize_session=False)
-    session.commit()
+                session1.query(Baddata).filter(Baddata.created_time ==t1,Baddata.standard_name ==item.standard_name,Baddata.types ==i["class"]).update({Baddata.Num: Baddata.Num+len(i["image"])}, synchronize_session=False)
+    try:
+        session1.commit()
+        session1.close()
+    except:
+        session1.close()
+        print('数据入库失败')
     return {"status":200}
 
 @app.post('/imgs/')
@@ -1159,10 +1273,8 @@ async def get_imgs(item:Item1):
         form.label_7.setPixmap(QPixmap(item.value))
     return {"status":200}
 
+
 def start_server():
-    today = datetime.date.today()
-    session.query(History).filter(History.created_time <= today - datetime.timedelta(days=30)).delete()
-    session.commit()
     import uvicorn
     uvicorn.run(app=app,
                 host="127.0.0.1",
@@ -1174,12 +1286,11 @@ server_thread=threading.Thread(target=start_server)
 server_thread.setDaemon(True)
 server_thread.start()
 
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     form = Ui_Form()
+    # form.run()
     form.show()
     form.showMaximized()
-    # form.setGeometry(0,0,1920,1080)
     # form.showFullScreen()
     sys.exit(app.exec_())

@@ -1,23 +1,14 @@
 import datetime
-import time
 from sqlalchemy import Column, String,Integer,create_engine,ForeignKey
 from sqlalchemy.orm import sessionmaker,relationship
 from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
 
-engine = create_engine("mysql+pymysql://root:1111@127.0.0.1/demo")
+engine = create_engine('mysql+pymysql://root:%s@localhost:3306/demo' % 1111,pool_size=10)
+# engine = create_engine("mysql+pymysql://root:1111@127.0.0.1/demo")
 
 Base = declarative_base()
 
-# def func1(start,end, date_list=[]):
-#     target = (start + datetime.timedelta(days=1))
-#     target_res = target.strftime("%Y-%m-%d")
-#     date_list.append(target_res)
-#     if target == end:
-#         pass
-#     else:
-#         func1(target,end,date_list)
-#     return date_list
 
 def func(today, date_list=[], count=0):
     target = (today - datetime.timedelta(days=1))
@@ -31,7 +22,7 @@ def func(today, date_list=[], count=0):
     return date_list
 
 #折线图
-def chart1(value):
+def chart1(session,value,start,end):
     data = []
     data1 = []
     data2 = []
@@ -42,6 +33,9 @@ def chart1(value):
     target_res = target.strftime("%Y-%m-%d")
     date_list = func(today, [])
     m_list =['01','02','03','04','05','06','07','08','09',10,11,12]
+    if start !='':
+        target_res =start.strftime("%Y-%m-%d")
+        today =end.strftime("%Y-%m-%d")
     if value !='':
         query = session.query(Dailydata).filter(Dailydata.created_time.between(target_res, today),Dailydata.standard_name.like("%" + value + "%")).all()
         query1 = session.query(Dailydata).filter(Dailydata.created_time.contains(today_res),Dailydata.standard_name.like("%" + value + "%")).all()
@@ -81,7 +75,7 @@ def chart1(value):
     return [series,date_list,series1]
 
 #饼图
-def chart2(value,start,end):
+def chart2(session,value,start,end):
     if start !='':
         start =start.strftime("%Y-%m-%d")
         end =end.strftime("%Y-%m-%d")
@@ -118,10 +112,9 @@ def chart2(value,start,end):
 
 #今日数据
 def get_today():
-    today = datetime.date.today()
-    target_res = today.strftime("%Y-%m-%d")
-    # query = session.query(Dailydata).filter(Dailydata.created_time==target_res).first()
-    query = session.query(Dailydata2).first()
+    session2 = MySession()
+    query = session2.query(Dailydata2).first()
+    session2.close()
     if query:
         all =query.goodNum+query.badNum
         return all,query.goodNum,query.badNum
@@ -153,7 +146,7 @@ class Baddata(Base):
     id = Column(Integer(), primary_key=True,autoincrement=True)
     Num = Column(Integer)
     standard_name = Column(String(20))
-    types =Column(Integer)
+    types =Column(String(20))
     created_time = Column(String(20))
 
 
@@ -170,7 +163,7 @@ class History(Base):
 
     id = Column(Integer(), primary_key=True,autoincrement=True)
     url1 = Column(String(100))
-    types =Column(Integer)
+    types =Column(String(20))
     standard_name = Column(String(20))
     created_time = Column(String(20))
 
@@ -273,9 +266,16 @@ class Item2(BaseModel):
 
 
 Base.metadata.create_all(engine)
+
 MySession = sessionmaker(bind=engine)
 session = MySession()
-res = session.query(Dailydata2).first()
-if not res:
-    session.add(Dailydata2(goodNum=0, badNum=0))
+try:
+    res = session.query(Dailydata2).first()
+    if not res:
+        session.add(Dailydata2(goodNum=0, badNum=0))
+    today = datetime.date.today()
+    session.query(History).filter(History.created_time <= today - datetime.timedelta(days=30)).delete()
     session.commit()
+except:
+    session.close()
+    session =MySession()

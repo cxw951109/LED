@@ -665,37 +665,39 @@ class Ui_Form(QWidget):
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.label_4 = QtWidgets.QLabel(self.widget)
         self.label_4.setScaledContents(True)
-        self.label_4.setMinimumSize(QtCore.QSize(200, 300))
+        self.label_4.setMinimumSize(QtCore.QSize(200, 145))
         self.label_4.setStyleSheet("background-color: rgb(0, 0, 0);\n"
                                    "border: 1px solid #EDEDED;\n"
                                    ";border-radius: 10px;\n"
                                    "padding:3px")
         self.horizontalLayout_2.addWidget(self.label_4)
-        self.label_5 = QtWidgets.QLabel(self.widget)
-        self.label_5.setScaledContents(True)
-        self.label_5.setMinimumSize(QtCore.QSize(200, 300))
-        self.label_5.setStyleSheet("background-color: rgb(0, 0, 0);\n"
-                                   "border: 1px solid #EDEDED;\n"
-                                   ";border-radius: 10px;\n"
-                                   "padding:3px")
-        self.horizontalLayout_2.addWidget(self.label_5)
         self.label_6 = QtWidgets.QLabel(self.widget)
         self.label_6.setScaledContents(True)
-        self.label_6.setMinimumSize(QtCore.QSize(200, 300))
+        self.label_6.setMinimumSize(QtCore.QSize(200, 145))
         self.label_6.setStyleSheet("background-color: rgb(0,0,0);\n"
                                    "border: 1px solid #EDEDED;\n"
                                    ";border-radius: 10px;\n"
                                    "padding:3px")
         self.horizontalLayout_2.addWidget(self.label_6)
+        self.gridLayout_2.addLayout(self.horizontalLayout_2, 2, 0, 1, 1)
+        self.horizontalLayout_22 = QtWidgets.QHBoxLayout()
+        self.label_5 = QtWidgets.QLabel(self.widget)
+        self.label_5.setScaledContents(True)
+        self.label_5.setMinimumSize(QtCore.QSize(200, 145))
+        self.label_5.setStyleSheet("background-color: rgb(0, 0, 0);\n"
+                                   "border: 1px solid #EDEDED;\n"
+                                   ";border-radius: 10px;\n"
+                                   "padding:3px")
+        self.horizontalLayout_22.addWidget(self.label_5)
         self.label_7 = QtWidgets.QLabel(self.widget)
         self.label_7.setScaledContents(True)
-        self.label_7.setMinimumSize(QtCore.QSize(200, 300))
+        self.label_7.setMinimumSize(QtCore.QSize(200, 145))
         self.label_7.setStyleSheet("background-color: rgb(0,0,0);\n"
                                    "border: 1px solid #EDEDED;\n"
                                    ";border-radius: 10px;\n"
                                    "padding:3px")
-        self.horizontalLayout_2.addWidget(self.label_7)
-        self.gridLayout_2.addLayout(self.horizontalLayout_2, 2, 0, 1, 1)
+        self.horizontalLayout_22.addWidget(self.label_7)
+        self.gridLayout_2.addLayout(self.horizontalLayout_22, 3, 0, 1, 1)
         self.label_8 = QtWidgets.QLabel(self.widget)
         self.label_8.setWordWrap(True)
         self.label_8.setAlignment(Qt.AlignCenter)
@@ -706,7 +708,7 @@ class Ui_Form(QWidget):
                                    "border-radius: 10px;\n"
                                    "padding:3px;\n"
                                    "font: 12pt \"幼圆\";")
-        self.gridLayout_2.addWidget(self.label_8, 3, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.label_8, 4, 0, 1, 1)
         self.widget1 = QtWidgets.QWidget(self.widget)
         self.widget1.setMaximumSize(QtCore.QSize(16777215, 120))
         self.widget1.setStyleSheet("background-color: rgb(238, 255, 255);\n"
@@ -842,7 +844,7 @@ class Ui_Form(QWidget):
         #                                 "")
         # self.horizontalLayout_3.addWidget(self.pushButton_3)
         self.gridLayout_4.addLayout(self.horizontalLayout_3, 0, 0, 1, 1)
-        self.gridLayout_2.addWidget(self.widget1, 4, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.widget1, 5, 0, 1, 1)
         self.gridLayout_3.addLayout(self.gridLayout_2, 0, 0, 1, 1)
         self.tabWidget.addTab(self.widget, "")
         #tag2
@@ -1263,14 +1265,18 @@ async def result_mes(item:Item2):
 
 @app.post('/imgs/')
 async def get_imgs(item:Item1):
+    image1 = QImage(item.value)
+    transform = QTransform()
+    transform.rotate(90)
+    image = image1.transformed(transform)
     if item.key ==1:
-        form.label_4.setPixmap(QPixmap(item.value))
+        form.label_4.setPixmap(QPixmap.fromImage(image))
     elif item.key ==2:
-        form.label_5.setPixmap(QPixmap(item.value))
+        form.label_5.setPixmap(QPixmap.fromImage(image))
     elif item.key ==3:
-        form.label_6.setPixmap(QPixmap(item.value))
+        form.label_6.setPixmap(QPixmap.fromImage(image))
     else:
-        form.label_7.setPixmap(QPixmap(item.value))
+        form.label_7.setPixmap(QPixmap.fromImage(image))
     return {"status":200}
 
 
